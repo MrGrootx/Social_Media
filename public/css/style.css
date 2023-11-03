@@ -125,3 +125,10 @@ body {
     text-decoration: none;
     color: var(--primary);
 }
+.error{
+  border-color: red !important;
+}
+
+.errorMessage{
+  color: red !important;
+}
