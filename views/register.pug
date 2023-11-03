@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title #{title}
+        link(rel="stylesheet" href="/css/style.css")
+    body
+        .form-container
+            h1 Grootx Development
+            p  Sign up now to become a member.
+            .row 
+                input(type="text" required="")
+                label Name 
+            .row 
+                input(type="text" required="")
+                label Email 
+            .row 
+                input(type="text" required="")
+                label Password 
+            .row 
+                input(type="text" required="")
+                label Confirm Password
+            .row 
+                button(type="submit") Sign Up
+            p Have Account ? 
+                a(href="login") Login Here   
