@@ -4,19 +4,22 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
         title #{title}
+        link(rel="icon", type="image/icon" href="/img/logo.png")
         link(rel="stylesheet" href="/css/style.css")
     body
         .form-container
             h1 Welcome back
             p  login in to access your account..
-            .row 
-                input(type="text" required="")
-                label Email or username 
-            .row 
-                input(type="text" required="")
-                label Password 
-            .row 
-                button(type="submit") Login Now
+            form(method="POST")
+                p.errorMessage #{errorMessage}
+                .row 
+                    input(type="text" required="" name="username")
+                    label Email or username 
+                .row 
+                    input(type="text" required="" name="password")
+                    label Password 
+                .row 
+                    button(type="submit") Login Now 
             p Not A Member ? 
                 a(href="/register") SignUp Here
                 br 

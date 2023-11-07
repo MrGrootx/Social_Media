@@ -1,26 +1,45 @@
 const express = require("express");
-const app = express();
-const port = 5000;
 const path = require("path");
 const bodyParser = require("body-parser");
-const connectDB = require('./db/connect')
+const session = require("express-session");
+
+const connectDB = require("./db/connect");
+const middleware = require('./middleware/middleware')
+
+
+const app = express();
+const port = 5000;
 
 app.set("view engine", "pug");
 app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: "Mr Groot",
+    resave: true,
+    saveUninitialized: false,
+  })
+);
 
 const staticUri = path.join(__dirname, "public");
 app.use(express.static(staticUri));
 
 // Routes
 const registerRoute = require("./routes/registerRou");
-app.use("/register", registerRoute);
-
 const loginRoute = require("./routes/loginRou");
-app.use("/login", loginRoute);
+const logOutRoute = require("./routes/logoutRou");
 
-app.get(["/", "/index", "home"], (req, res) => {
-  res.send("Hello World");
+app.use("/register",middleware.isLogin,  registerRoute);
+app.use("/login",middleware.isLogin, loginRoute);
+app.use("/logout", logOutRoute);
+
+app.get(["/", "/index", "/home"], middleware.isAlreadyLogin, (req, res) => {
+  const PageData = {
+    title: "Home Page",
+    UserDetails: req.session.mrgroot
+  }
+
+  res.status(200).render('home', PageData)
 });
 
 app.get("/about", (req, res) => {
