@@ -1,35 +1,28 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1.0")
-        title #{title}
-        link(rel="stylesheet" href="/css/style.css")
-        link(rel="icon", type="image/icon" href="/img/logo.png")
-    body
-        .form-container
-            h1 Grootx Development
-            p  Sign up now to become a member.
-            form#frm(method="POST")
-                p.errorMessage #{errorMessage}
-                .row 
-                    input#name(type="text" required="" name="name" value=name)
-                    label Name 
-                .row 
-                    input#email(type="text" required="" name="email" value=email)
-                    label Email 
-                .row 
-                    input#username(type="text" required="" name="username" value=username)
-                    label Username 
-                .row 
-                    input#password(type="password" required="" name="password")
-                    label Password 
-                .row 
-                    input#confirm(type="password" required="" name="confirm")
-                    label Confirm Password
-                .row 
-                    button(type="submit") Sign Up 
-            p Have Account ? 
-                a(href="login") Login Here
+extends layouts/form-layout.pug
+block content
+    .form-container
+        h1 Grootx Development
+        p  Sign up now to become a member.
+        form#frm(method="POST")
+            p.errorMessage #{errorMessage}
+            .row 
+                input#name(type="text" required="" name="name" value=name)
+                label Name 
+            .row 
+                input#email(type="text" required="" name="email" value=email)
+                label Email 
+            .row 
+                input#username(type="text" required="" name="username" value=username)
+                label Username 
+            .row 
+                input#password(type="password" required="" name="password")
+                label Password 
+            .row 
+                input#confirm(type="password" required="" name="confirm")
+                label Confirm Password
+            .row 
+                button(type="submit") Sign Up 
+        p Have Account ? 
+            a(href="login") Login Here
 
-        script(src="/js/register.js", defer="") 
+    script(src="/js/register.js" defer="") 

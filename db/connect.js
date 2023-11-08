@@ -6,7 +6,7 @@ class Database {
   }
   connect() {
     return mongoose
-      .connect("mongodb://127.0.0.1:27017/social")
+      .connect(process.env.DATABASE)
       .then(() => {
         console.log("Database connected");
       })
