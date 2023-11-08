@@ -5,8 +5,9 @@ const User = require("../schemas/UserSchema");
 
 router.get("/", (req, res) => {
   const pagedata = {
-    title: "UserLogin",
+    title: "User Login",
   };
+  res.setHeader("Cache-Control", "no-cache", "no-store", "must-revalidate")
   res.status(200).render("login", pagedata);
 });
 
@@ -16,7 +17,6 @@ router.post("/", async (req, res) => {
 
   const username = req.body.username.trim();
   const password = req.body.password.trim();
- 
 
   if (username && password) {
     const user = await User.findOne({
@@ -29,9 +29,9 @@ router.post("/", async (req, res) => {
     //    console.log(user);
     if (user != null) {
       const result = await bcrypt.compare(password, user.password);
-      if(result === true){
+      if (result === true) {
         req.session.user = user;
-        req.session.mrgroot = user
+        req.session.mrgroot = user;
         return res.redirect("/home");
       } else {
         pageData.errorMessage = "something went wrong";

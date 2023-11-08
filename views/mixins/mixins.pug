@@ -1,0 +1,22 @@
+mixin navbar(userDetails)
+    .navbar
+        h3 Groot Development
+        ul
+            li 
+                a(href="/home") Home  
+            li 
+                a(href="/settings") Settings  
+            li 
+                a(href="") Welcome #{userDetails.name} 
+            li 
+                a(href="/logout") Logout
+
+
+mixin createPostForm(userDetails)
+    .post-container 
+        .user-pic
+            img(src=userDetails.profilePic, alt="user profile")
+        .textarea 
+            textarea#postTextarea(placeholder="What's Happening ?")
+            .button
+                button#btnPost(disabled="") Post  

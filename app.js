@@ -44,6 +44,7 @@ app.get(["/", "/index", "/home"], middleware.isAlreadyLogin, (req, res) => {
   res.status(200).render('home', PageData)
 });
 
+// SETTINGS PAGE
 app.get("/settings", middleware.isAlreadyLogin,  (req, res) => {
   const PageData = {
     title: "Settings  ",

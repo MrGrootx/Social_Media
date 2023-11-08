@@ -2,6 +2,22 @@ extends layouts/main-layout.pug
 block content
     +navbar(UserDetails)
     .container 
-        h1 Home Page
-       
-   
+        .home-row
+            .nav.sidebar 
+                ul 
+                    li 
+                        a(href="#")
+                            ion-icon(name="home-outline") 
+                            | Home         
+                    li 
+                        a(href="#")
+                            ion-icon(name="person-outline") 
+                            | Profile 
+                    li 
+                        a(href="#")
+                            ion-icon(name="notifications-outline") 
+                            | Notifications
+            .main-container 
+                +createPostForm(UserDetails)
+
+    script(src="js/home.js" defer="")

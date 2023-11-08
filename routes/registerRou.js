@@ -8,6 +8,7 @@ router.get("/", (req, res) => {
   const pagedata = {
     title: "Registration",
   };
+  res.setHeader("Cache-Control", "no-cache", "no-store", "must-revalidate")
   res.status(200).render("register", pagedata);
 });
 
@@ -34,7 +35,9 @@ router.post("/", async (req, res) => {
       const data = req.body;
       data.password = await bcrypt.hash(password, 10);
       User.create(data).then((user) => {
-        return res.status(201).json(user);
+        // return res.status(201).json(user);
+        req.session.mrgroot = user;
+        return res.redirect("/home");
       });
     } else {
       // User name check

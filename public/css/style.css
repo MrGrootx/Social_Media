@@ -89,7 +89,8 @@ body {
 }
 
 .form-container .row input:focus + label,
-.form-container .row input:valid + label {
+.form-container .row input:valid + label ,
+.form-container .row input:autofill + label {
     top: -10px;
     background-color: var(--white);
     padding: 0px;
