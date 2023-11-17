@@ -7,6 +7,7 @@ const userSchema = new Schema(
     username: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true },
     profilePic: { type: String, default: "/img/profilePic.png" },
+    likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true, versionKey: false  }
 );

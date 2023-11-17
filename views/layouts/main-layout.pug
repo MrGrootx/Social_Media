@@ -7,10 +7,11 @@ html(lang="en")
         link(rel="icon" type="image/icon" href="/img/logo.png")
         link(rel="stylesheet" href="/css/main.css")
         title #{title}
+        script.
+            var userLoggedIn = !{UserDetailsJson};
     body
     block content
 
-    script(type='module', src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js')
-    script(nomodule='', src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js')
+    script(type='module' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js')
+    script(nomodule='' src='https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js')
 
-        

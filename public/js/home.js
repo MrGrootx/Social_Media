@@ -45,11 +45,10 @@ postBtn.addEventListener("click", function (e) {
       const post = JSON.parse(xhr.responseText);
       const messages = document.querySelector(".messages");
 
-      const htmlData = createPost(post)
-      messages.insertAdjacentHTML("afterbegin",  htmlData)
+      const htmlData = createPost(post);
+      messages.insertAdjacentHTML("afterbegin", htmlData);
       postTextarea.value = "";
       postBtn.disabled = true;
-
     } else if (xhr.readyState === 4) {
       console.error("Request failed with status: " + xhr.status);
     }
@@ -59,6 +58,7 @@ postBtn.addEventListener("click", function (e) {
 function createPost(post) {
   // console.log(post);
   const img = post.postedBy.profilePic;
+  const activeBtn = post.likes.includes(userLoggedIn._id) ? "active" : "";
   let data = `
 
   <div class="post" data-id='${post._id}'> 
@@ -84,7 +84,10 @@ function createPost(post) {
           <div class="footer"> 
           <button><ion-icon name="chatbubble-outline"></ion-icon></button>
           <button><ion-icon name="repeat-outline"></ion-icon></button>
-          <button><ion-icon name="heart-outline"></ion-icon></button>
+          <button class="likeBtn ${activeBtn}" > 
+          <ion-icon name="heart-outline"></ion-icon>
+          <span class="">${post.likes.length ||  ""}</span>
+          </button>
           </div>
       
           
@@ -95,6 +98,37 @@ function createPost(post) {
   return data;
 }
 
+document.addEventListener("click", async function (event) {
+  const target = event.target;
+  if (target.classList.contains("likeBtn")) {
+    const likeBtn = target;
+    const postId = getpostId(likeBtn);
+    // console.log(postId);
+    const uri = `/api/posts/${postId}/like`;
+    const response = await fetch(uri, { method: "PUT" });
+    const posts = await response.json();
+
+    // console.log(posts);
+    likeBtn.querySelector("span").textContent = posts.likes.length || "";
+    if(posts.likes.includes(userLoggedIn._id)){
+      likeBtn.classList.add("active");
+    } else {
+      likeBtn.classList.remove("active")
+    }
+  }
+});
+
+function getpostId(element) {
+  const isRoot = element.classList.contains("post");
+  const rootElement = isRoot == "true" ? element : element.closest(".post");
+  const postId = rootElement.dataset.id;
+  if (postId === undefined) {
+    return alert("Post id Undefined");
+  }
+  return postId;
+}
+
+/*********************************************** */
 function timeFormat(current, previous) {
   const msPerMinute = 60 * 1000;
   const msPerHour = msPerMinute * 60;

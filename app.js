@@ -38,6 +38,7 @@ app.get(["/", "/index", "/home"], middleware.isAlreadyLogin, (req, res) => {
   const PageData = {
     title: "Home Page",
     UserDetails: req.session.mrgroot,
+    UserDetailsJson: JSON.stringify(req.session.mrgroot),
   };
 
   res.status(200).render("home", PageData);
@@ -47,7 +48,7 @@ app.get(["/", "/index", "/home"], middleware.isAlreadyLogin, (req, res) => {
 app.get("/settings", middleware.isAlreadyLogin, (req, res) => {
   const PageData = {
     title: "Settings  ",
-    UserDetails: req.session.mrgroot,
+    UserDetails: req.session.mrgroot  
   };
 
   res.status(200).render("settings", PageData);
