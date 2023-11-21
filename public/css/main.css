@@ -210,6 +210,14 @@ a {
 }
 
 .likeBtn ion-icon,
-.likeBtn span {
+.retweetBtn ion-icon,
+.likeBtn span,
+.retweetBtn span {
   pointer-events: none;
+}
+
+.retweetText,
+.retweetText a{
+  font-size: 11px;
+  color: var(--color4);
 }

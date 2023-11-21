@@ -57,11 +57,29 @@ postBtn.addEventListener("click", function (e) {
 
 function createPost(post) {
   // console.log(post);
+  const isRetweet = post.retweetData !== undefined;
+  const retweetedBy = isRetweet ? post.postedBy.username : null;
+  post = isRetweet ? post.retweetData : post;
+
+  let retweetText = "";
+  if (isRetweet) {
+    retweetText = `
+      <span>
+      <ion-icon name="repeat-outline"></ion-icon>
+        Retweeted by <a href='/profile/${retweetedBy}'>@${retweetedBy}</a>
+      
+      </span>`;
+  }
+
   const img = post.postedBy.profilePic;
   const activeBtn = post.likes.includes(userLoggedIn._id) ? "active" : "";
+  const activeretweetBtn = post.retweetUsers.includes(userLoggedIn._id) ? "active" : "";
   let data = `
 
   <div class="post" data-id='${post._id}'> 
+
+    <div class='retweetText'>${retweetText}</div>
+
     <div class='content-container'>
         <div class="user-pic">
           <img src='${img}' alt="user-pic" width="50px" height="50px"  />
@@ -83,10 +101,12 @@ function createPost(post) {
 
           <div class="footer"> 
           <button><ion-icon name="chatbubble-outline"></ion-icon></button>
-          <button><ion-icon name="repeat-outline"></ion-icon></button>
+          <button class="retweetBtn ${activeretweetBtn}">
+          <span class="">${post.retweetUsers.length || ""}</span>
+          <ion-icon name="repeat-outline"></ion-icon></button>
           <button class="likeBtn ${activeBtn}" > 
           <ion-icon name="heart-outline"></ion-icon>
-          <span class="">${post.likes.length ||  ""}</span>
+          <span class="">${post.likes.length || ""}</span>
           </button>
           </div>
       
@@ -98,6 +118,7 @@ function createPost(post) {
   return data;
 }
 
+// Link
 document.addEventListener("click", async function (event) {
   const target = event.target;
   if (target.classList.contains("likeBtn")) {
@@ -110,11 +131,32 @@ document.addEventListener("click", async function (event) {
 
     // console.log(posts);
     likeBtn.querySelector("span").textContent = posts.likes.length || "";
-    if(posts.likes.includes(userLoggedIn._id)){
+    if (posts.likes.includes(userLoggedIn._id)) {
       likeBtn.classList.add("active");
     } else {
-      likeBtn.classList.remove("active")
+      likeBtn.classList.remove("active");
     }
+  }
+});
+//Retweet
+document.addEventListener("click", async function (event) {
+  const target = event.target;
+  if (target.classList.contains("retweetBtn")) {
+    const likeBtn = target;
+    const postId = getpostId(likeBtn);
+    // console.log(postId);
+    const uri = `/api/posts/${postId}/retweetBtn`;
+    const response = await fetch(uri, { method: "POST" });
+    const posts = await response.json();
+    console.log(posts);
+
+    // console.log(posts);
+    // likeBtn.querySelector("span").textContent = posts.likes.length || "";
+    // if(posts.likes.includes(userLoggedIn._id)){
+    //   likeBtn.classList.add("active");
+    // } else {
+    //   likeBtn.classList.remove("active")
+    // }
   }
 });
 
