@@ -211,13 +211,77 @@ a {
 
 .likeBtn ion-icon,
 .retweetBtn ion-icon,
+.trigger ion-icon,
 .likeBtn span,
 .retweetBtn span {
   pointer-events: none;
 }
 
 .retweetText,
-.retweetText a{
+.retweetText a {
   font-size: 11px;
   color: var(--color4);
+}
+
+.comment-section {
+  background-color: rgb(241, 244, 247);
+  padding: 5px;
+  display: none;
+}
+
+.comment-section .textareaDiv {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 5px;
+  display: flex;
+  position: relative;
+}
+
+.comment-section .textareaDiv textarea {
+  flex: 1;
+  resize: none;
+  outline: none;
+  padding: 5px 10px;
+  border: none;
+  
+}
+
+.comment-section .textareaDiv .clearBtn{
+  position: absolute;
+  right: 75px;
+  top: 0px;
+}
+
+.comment-section .textareaDiv .btnSend {
+  background-color: var(--primary);
+  color: white;
+  width: 70px;
+  font-size: 14px;
+}
+
+.comment {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e9e7e7;
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.comment .user-pic {
+  width: 50px;
+  height: 50px;
+}
+
+.comment-body {
+  flex: 1;
+}
+
+.comment-header{
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-section.commentActive{
+  display: block;
 }

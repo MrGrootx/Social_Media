@@ -73,7 +73,9 @@ function createPost(post) {
 
   const img = post.postedBy.profilePic;
   const activeBtn = post.likes.includes(userLoggedIn._id) ? "active" : "";
-  const activeretweetBtn = post.retweetUsers.includes(userLoggedIn._id) ? "active" : "";
+  const activeretweetBtn = post.retweetUsers.includes(userLoggedIn._id)
+    ? "active"
+    : "";
   let data = `
 
   <div class="post" data-id='${post._id}'> 
@@ -100,7 +102,9 @@ function createPost(post) {
           </div>
 
           <div class="footer"> 
-          <button><ion-icon name="chatbubble-outline"></ion-icon></button>
+          <button class="trigger">
+            <ion-icon name="chatbubble-outline"></ion-icon>
+          </button>
           <button class="retweetBtn ${activeretweetBtn}">
           <span class="">${post.retweetUsers.length || ""}</span>
           <ion-icon name="repeat-outline"></ion-icon></button>
@@ -109,16 +113,42 @@ function createPost(post) {
           <span class="">${post.likes.length || ""}</span>
           </button>
           </div>
-      
-          
+          <!--Comment -->
+          <div class="comment-section" data-id='${post._id}'>
+              <div class="textareaDiv">
+              <textarea placeholder="Your Comments"
+              class="txtComment"
+              data-id='${post._id}'></textarea>
+              <ion-icon name="close-outline" class="clearBtn" ></ion-icon>
+                <button class="btnSend">
+                  send
+                    <ion-icon name="send-outline"></ion-icon>
+                </button>
+              </div>
+              <div class="comment-container">
+
+              <!-- user comment start --> 
+                
+
+              <!-- sec -->
+                
+
+
+
+                <!-- user comment end --> 
+              </div>
+              
+          </div>
+          <!--Comment End -->
         </div>
     </div>
   </div>
+
   `;
   return data;
 }
 
-// Link
+// Like
 document.addEventListener("click", async function (event) {
   const target = event.target;
   if (target.classList.contains("likeBtn")) {
@@ -148,15 +178,13 @@ document.addEventListener("click", async function (event) {
     const uri = `/api/posts/${postId}/retweetBtn`;
     const response = await fetch(uri, { method: "POST" });
     const posts = await response.json();
-    console.log(posts);
-
     // console.log(posts);
-    // likeBtn.querySelector("span").textContent = posts.likes.length || "";
-    // if(posts.likes.includes(userLoggedIn._id)){
-    //   likeBtn.classList.add("active");
-    // } else {
-    //   likeBtn.classList.remove("active")
-    // }
+    likeBtn.querySelector("span").textContent = posts.retweetUsers.length || "";
+    if (posts.likes.includes(userLoggedIn._id)) {
+      likeBtn.classList.add("active");
+    } else {
+      likeBtn.classList.remove("active");
+    }
   }
 });
 
@@ -169,6 +197,107 @@ function getpostId(element) {
   }
   return postId;
 }
+// Comment
+document.addEventListener("click", async function (event) {
+  const target = event.target;
+  if (target.classList.contains("trigger")) {
+    const commentBtn = target;
+    const postId = getpostId(commentBtn);
+    // console.log(postId);
+
+    const commentSection = commentBtn.parentElement.nextElementSibling;
+    //console.log(commentSection);
+    commentSection.classList.toggle("commentActive");
+    if (commentSection.classList.contains("commentActive")) {
+      //Fetch User Comments From Db
+      const url = `/api/posts/${postId}/usercomment`;
+      const response = await fetch(url);
+      const comments = await response.json();
+
+      const commentContainer =
+        commentSection.querySelector(".comment-container");
+      let htmlComment = "";
+      comments.forEach((comment) => {
+        // console.log(comment);
+        htmlComment += `
+        <div class="comment">
+        <div class="user-pic">
+          <img src='${
+            comment.commentBy.profilePic
+          }' alt="user-pic" width="100px"   />
+        </div>
+        <div class="comment-body">
+          <div class="comment-header">
+            <div class="username">
+              <a href="#">${comment.commentBy.name}</a>
+              <span>${comment.commentBy.username}</span>
+            </div>
+              <span class="time">${timeFormat(
+                new Date(),
+                new Date(comment.createdAt)
+              )}</span>
+            </div>
+            <div class="comment-message">
+              <p>${comment.comment}</p>
+          </div>
+        </div>
+      </div>
+        `;
+      });
+      commentContainer.innerHTML = htmlComment;
+    }
+  }
+  if (target.classList.contains("clearBtn")) {
+    // console.log('clearBtn');
+    const textArea = target.previousElementSibling;
+    textArea.value = "";
+    textArea.focus();
+  }
+
+  if (target.classList.contains("btnSend")) {
+    // console.log('clearBtn');
+    const textArea = target.previousElementSibling.previousElementSibling;
+    const postId = textArea.dataset.id;
+    // console.log(textArea.value, "" + postId);
+
+    if (textArea.value.trim() != "") {
+      const uri = `/api/posts/${postId}/comment`;
+      const data = new URLSearchParams();
+      data.append("comment", textArea.value.trim());
+      const response = await fetch(uri, { method: "POST", body: data });
+      const comment = await response.json();
+      console.log(comment);
+      const commentContainer = textArea.parentElement.nextElementSibling;
+      commentContainer.innerHTML += `
+        <div class="comment">
+        <div class="user-pic">
+          <img src='${userLoggedIn.profilePic}' alt="user-pic" width="100px"   />
+        </div>
+        <div class="comment-body">
+          <div class="comment-header">
+            <div class="username">
+              <a href="#">${userLoggedIn.name}</a>
+              <span>@${userLoggedIn.username}</span>
+            </div>
+              <span class="time">${timeFormat(
+                new Date(),
+                new Date(comment.createdAt)
+              )}</span>
+            </div>
+            <div class="comment-message">
+              <p>${comment.comment}</p>
+          </div>
+        </div>
+      </div>
+        `;
+
+      textArea.value = "";
+    } else {
+      textArea.value = "";
+      textArea.focus();
+    }
+  }
+});
 
 /*********************************************** */
 function timeFormat(current, previous) {

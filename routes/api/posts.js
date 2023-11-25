@@ -4,6 +4,7 @@ const router = express.Router();
 
 const User = require("../../schemas/UserSchema");
 const Post = require("../../schemas/postSchema");
+const Comment = require("../../schemas/CommentSchema");
 
 // Get All post Details
 
@@ -118,6 +119,51 @@ router.post("/:id/retweetBtn", async (req, res) => {
     res.sendStatus(400);
   });
   res.status(200).send(post);
+});
+
+//Comments
+router.post("/:id/comment", async (req, res) => {
+  const postId = req.params.id;
+  const comment = req.body.comment;
+  const userId = req.session.mrgroot._id;
+
+  let postedComment = await Comment.create({
+    comment: comment,
+    commentBy: userId,
+    commentTo: postId,
+  }).catch((err) => {
+    console.log(err);
+    req.sendStatus(400);
+  });
+
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    {
+      $push: { commentUsers: userId },
+    },
+    { new: true }
+  ).catch((err) => {
+    console.log(err);
+    req.sendStatus(400);
+  });
+
+  res.status(200).send(postedComment);
+});
+
+//Previous Comments For a post
+router.get("/:id/usercomment", async (req, res) => {
+  const postId = req.params.id;
+  const comments = await Comment.find({ commentTo: postId })
+    .populate("commentBy")
+    .sort({ createdAt: 1 })
+    .then(async (results) => {
+      await User.populate(results, { path: "commentBy.postedBy" });
+      return res.status(200).send(results);
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.sendStatus(400);
+    });
 });
 
 module.exports = router;
