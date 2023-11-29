@@ -185,6 +185,7 @@ document.addEventListener("click", async function (event) {
     } else {
       likeBtn.classList.remove("active");
     }
+    location.reload();
   }
 });
 
@@ -271,7 +272,9 @@ document.addEventListener("click", async function (event) {
       commentContainer.innerHTML += `
         <div class="comment">
         <div class="user-pic">
-          <img src='${userLoggedIn.profilePic}' alt="user-pic" width="100px"   />
+          <img src='${
+            userLoggedIn.profilePic
+          }' alt="user-pic" width="100px"   />
         </div>
         <div class="comment-body">
           <div class="comment-header">
@@ -299,27 +302,41 @@ document.addEventListener("click", async function (event) {
   }
 });
 
-/*********************************************** */
-function timeFormat(current, previous) {
-  const msPerMinute = 60 * 1000;
-  const msPerHour = msPerMinute * 60;
-  const msPerDay = msPerHour * 24;
-  const msPerMonth = msPerDay * 30;
-  const msPerYear = msPerDay * 365;
+// View Post Page
+document.addEventListener("click", async function (event) {
+  const target = event.target;
 
-  const diff = current - previous;
-  if (diff < msPerMinute) {
-    if (diff / 1000 < 30) return "Just Now";
-    return Math.round(diff / 1000) + "seconds ago";
-  } else if (diff < msPerHour) {
-    return Math.round(diff / msPerMinute) + "minutes ago";
-  } else if (diff < msPerDay) {
-    return Math.round(diff / msPerHour) + "hours ago";
-  } else if (diff < msPerMonth) {
-    return Math.round(diff / msPerDay) + "days ago";
-  } else if (diff < msPerYear) {
-    return Math.round(diff / msPerMonth) + "months ago";
-  } else {
-    return Math.round(diff / msPerYear) + "years ago";
+  if (target.classList.contains("message-container")) {
+    const postID = target.parentElement.parentElement.dataset.id;
+
+    if (postID == undefined) return;
+    window.location.href = "/posts/" + postID
   }
-}
+
+  // Last Local 19 Min : 25 sec
+});
+
+/*********************************************** */
+// function timeFormat(current, previous) {
+//   const msPerMinute = 60 * 1000;
+//   const msPerHour = msPerMinute * 60;
+//   const msPerDay = msPerHour * 24;
+//   const msPerMonth = msPerDay * 30;
+//   const msPerYear = msPerDay * 365;
+
+//   const diff = current - previous;
+//   if (diff < msPerMinute) {
+//     if (diff / 1000 < 30) return "Just Now";
+//     return Math.round(diff / 1000) + "seconds ago";
+//   } else if (diff < msPerHour) {
+//     return Math.round(diff / msPerMinute) + "minutes ago";
+//   } else if (diff < msPerDay) {
+//     return Math.round(diff / msPerHour) + "hours ago";
+//   } else if (diff < msPerMonth) {
+//     return Math.round(diff / msPerDay) + "days ago";
+//   } else if (diff < msPerYear) {
+//     return Math.round(diff / msPerMonth) + "months ago";
+//   } else {
+//     return Math.round(diff / msPerYear) + "years ago";
+//   }
+// }

@@ -28,10 +28,12 @@ app.use(express.static(staticUri));
 const registerRoute = require("./routes/registerRou");
 const loginRoute = require("./routes/loginRou");
 const logOutRoute = require("./routes/logoutRou");
+const postRou = require("./routes/postRou");
 
 app.use("/register", middleware.isLogin, registerRoute);
 app.use("/login", middleware.isLogin, loginRoute);
 app.use("/logout", logOutRoute);
+app.use("/posts", middleware.isAlreadyLogin, postRou);
 
 // HOME PAGE
 app.get(["/", "/index", "/home"], middleware.isAlreadyLogin, (req, res) => {
@@ -48,7 +50,7 @@ app.get(["/", "/index", "/home"], middleware.isAlreadyLogin, (req, res) => {
 app.get("/settings", middleware.isAlreadyLogin, (req, res) => {
   const PageData = {
     title: "Settings  ",
-    UserDetails: req.session.mrgroot  
+    UserDetails: req.session.mrgroot,
   };
 
   res.status(200).render("settings", PageData);
@@ -59,5 +61,5 @@ const postApiRoute = require("./routes/api/posts");
 app.use("/api/posts", postApiRoute);
 
 app.listen(port, () => {
-  console.log(`Server is running on port localhost:${port}`);
+  console.log(`Server is running on port  http://localhost:${port}`);
 });

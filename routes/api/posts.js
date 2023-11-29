@@ -166,4 +166,29 @@ router.get("/:id/usercomment", async (req, res) => {
     });
 });
 
+//Get Single Post
+router.get("/:id/single", (req, res) => {
+  const postID = req.params.id;
+
+  Post.findById({ _id: postID })
+    .populate("postedBy")
+    .populate("retweetData")
+    .sort({ createdAt: 1 })
+    .then(async (results) => {
+      results = await User.populate(results, { path: "retweetData.postedBy" });
+
+      const comments = await Comment.find({ commentTo: postID })
+        .populate("commentBy")
+        .sort({
+          createdAt: 1
+        });
+
+      return res.status(200).send({ post: results, comments: comments });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.sendStatus(400);
+    });
+});
+
 module.exports = router;
