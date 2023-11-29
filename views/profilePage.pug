@@ -1,0 +1,17 @@
+extends layouts/main-layout.pug
+block content
+    +navbar(UserDetails)
+    .container
+        if !profileUser
+            span Invalid UserName or check the url 
+        else  
+            .profile-head
+                .profile-container
+                    .pic 
+                .profile-button-container
+                    if profileUser._id!=UserDetails._id 
+                        a.profile-btn(href=`/messages/${profileUser._id}`)
+                            ion-icon(name='mail')
+                    else 
+                        a.profile-btn(href=`/messages/${profileUser._id}`)
+                            ion-icon(name='mail')

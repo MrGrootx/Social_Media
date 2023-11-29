@@ -29,11 +29,13 @@ const registerRoute = require("./routes/registerRou");
 const loginRoute = require("./routes/loginRou");
 const logOutRoute = require("./routes/logoutRou");
 const postRou = require("./routes/postRou");
+const profileRou = require("./routes/profileRou");
 
 app.use("/register", middleware.isLogin, registerRoute);
 app.use("/login", middleware.isLogin, loginRoute);
 app.use("/logout", logOutRoute);
 app.use("/posts", middleware.isAlreadyLogin, postRou);
+app.use("/profile", middleware.isAlreadyLogin, profileRou);
 
 // HOME PAGE
 app.get(["/", "/index", "/home"], middleware.isAlreadyLogin, (req, res) => {

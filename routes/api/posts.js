@@ -180,7 +180,7 @@ router.get("/:id/single", (req, res) => {
       const comments = await Comment.find({ commentTo: postID })
         .populate("commentBy")
         .sort({
-          createdAt: 1
+          createdAt: 1,
         });
 
       return res.status(200).send({ post: results, comments: comments });
@@ -189,6 +189,21 @@ router.get("/:id/single", (req, res) => {
       console.log(err);
       return res.sendStatus(400);
     });
+});
+
+//Delete Post & comments
+router.delete("/:id", async (req, res) => {
+  const postID = req.params.id;
+  const userId = req.session.mrgroot._id;
+  try {
+    await Post.findByIdAndDelete(postID);
+    await Post.deleteMany({ retweetData: postID });
+    await Comment.deleteMany({ commentTo: postID });
+
+    return res.status(202).send({ status: "success" });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;

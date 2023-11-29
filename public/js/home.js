@@ -61,6 +61,12 @@ function createPost(post) {
   const retweetedBy = isRetweet ? post.postedBy.username : null;
   post = isRetweet ? post.retweetData : post;
 
+  let delButton = "";
+  // console.log(post.postedBy._id, "" , userLoggedIn._id);
+  if (post.postedBy._id == userLoggedIn._id) {
+    delButton = `<button class="del-btn">&times;</button>`;
+  }
+
   let retweetText = "";
   if (isRetweet) {
     retweetText = `
@@ -83,6 +89,7 @@ function createPost(post) {
     <div class='retweetText'>${retweetText}</div>
 
     <div class='content-container'>
+      ${delButton}
         <div class="user-pic">
           <img src='${img}' alt="user-pic" width="50px" height="50px"  />
         </div>
@@ -310,7 +317,7 @@ document.addEventListener("click", async function (event) {
     const postID = target.parentElement.parentElement.dataset.id;
 
     if (postID == undefined) return;
-    window.location.href = "/posts/" + postID
+    window.location.href = "/posts/" + postID;
   }
 
   // Last Local 19 Min : 25 sec
@@ -340,3 +347,31 @@ document.addEventListener("click", async function (event) {
 //     return Math.round(diff / msPerYear) + "years ago";
 //   }
 // }
+
+// Delete Post
+
+const model = document.querySelector(".model");
+document.addEventListener("click", async function (event) {
+  const target = event.target;
+  if (target.classList.contains("del-btn")) {
+    //delete Post
+    model.classList.add("show-model");
+    const postID = target.parentElement.parentElement.dataset.id;
+    // console.log(postID);
+    const btnDel = document.querySelector("#btnDelete");
+    btnDel.addEventListener("click", async function () {
+      const url = `/api/posts/${postID}`;
+      fetch(url, { method: "DELETE" }).then(() => {
+        model.classList.remove("show-model");
+        location.reload();
+      });
+    });
+  } else if (target.classList.contains("close-button")) {
+    model.classList.remove("show-model");
+  }
+});
+window.addEventListener("click", function (event) {
+  if (event.target === model) {
+    model.classList.remove("show-model");
+  }
+});
